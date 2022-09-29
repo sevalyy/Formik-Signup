@@ -1,20 +1,32 @@
-// Render Prop
 import React from "react";
 import "./form.css";
 import { Formik, Form, Field, ErrorMessage } from "formik";
+import validateInput from "./validations";
 
 const BasicForm = () => (
   <div>
     <h1>Sign up Form</h1>
     <Formik
+      // set initial values
       initialValues={{
         email: "",
         password: "",
+        confirmPassword: "",
         gender: "female",
         hobbies: [],
         country: "",
       }}
-      // validate e-mail address
+      // onsubmit
+      onSubmit={(values, { setSubmitting }) => {
+        setTimeout(() => {
+          alert(JSON.stringify(values, null, 2));
+          setSubmitting(false);
+        }, 400);
+      }}
+      // VALIDATION
+      // validation with yup (external)
+      validationSchema={validateInput}
+      // validation (internal)
       validate={(values) => {
         const errors = {};
         if (!values.email) {
@@ -25,13 +37,6 @@ const BasicForm = () => (
           errors.email = "Invalid email address";
         }
         return errors;
-      }}
-      //onsubmit
-      onSubmit={(values, { setSubmitting }) => {
-        setTimeout(() => {
-          alert(JSON.stringify(values, null, 2));
-          setSubmitting(false);
-        }, 400);
       }}
     >
       {({ isSubmitting, handleChange }) => (
@@ -45,6 +50,11 @@ const BasicForm = () => (
             <label htmlFor="password">PASSWORD: </label>
             <Field type="password" name="password" />
             <ErrorMessage name="password" component="div" />
+            <br />
+            <br />
+            <label htmlFor="confirmPassword"> CONFIRM PASSWORD: </label>
+            <Field type="password" name="confirmPassword" />
+            <ErrorMessage name="confirmPassword" component="div" />
             <br />
             <br />
             <label htmlFor="gender">GENDER: </label>
